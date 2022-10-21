@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://nonplayable/scripts/NonPlayable.gd" type="Script" id=1]
+[ext_resource path="res://misc/ScreenWrapper.tscn" type="PackedScene" id=2]
+[ext_resource path="res://misc/Explosion.tscn" type="PackedScene" id=3]
+
+[sub_resource type="Animation" id=1]
+resource_name = "pulse"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.376471 ) ]
+}
+
+[node name="NonPlayable" type="Area2D" groups=["hostile"]]
+collision_layer = 0
+collision_mask = 3
+script = ExtResource( 1 )
+ExplosionScene = ExtResource( 3 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "pulse"
+anims/pulse = SubResource( 1 )
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Line2D" type="Line2D" parent="Body"]
+
+[node name="ScreenWrapper" parent="." instance=ExtResource( 2 )]
+
+[connection signal="area_entered" from="." to="." method="_on_NonPlayable_area_entered"]

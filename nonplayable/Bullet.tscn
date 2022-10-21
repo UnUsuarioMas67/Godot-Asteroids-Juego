@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://nonplayable/scripts/Bullet.gd" type="Script" id=1]
+[ext_resource path="res://nonplayable/NonPlayable.tscn" type="PackedScene" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 4, 1 )
+
+[node name="Bullet" groups=["bullet"] instance=ExtResource( 2 )]
+modulate = Color( 1, 1, 1, 0.72096 )
+collision_layer = 2
+collision_mask = 0
+script = ExtResource( 1 )
+speed = 1600.0
+
+[node name="CollisionPolygon2D" parent="." index="0"]
+disabled = true
+
+[node name="Body" parent="." index="2"]
+position = Vector2( 4, 0 )
+
+[node name="Line2D" parent="Body" index="0"]
+position = Vector2( 4, 0 )
+points = PoolVector2Array( -12, 0, -4, 0 )
+width = 3.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="ScreenWrapper" parent="." index="3"]
+offset = 36
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="4"]
+shape = SubResource( 1 )
+
+[node name="LifeTime" type="Timer" parent="." index="5"]
+wait_time = 0.5
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="LifeTime" to="." method="_on_Timer_timeout"]

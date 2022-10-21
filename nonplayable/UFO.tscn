@@ -1,0 +1,72 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://nonplayable/NonPlayable.tscn" type="PackedScene" id=1]
+[ext_resource path="res://nonplayable/scripts/UFO.gd" type="Script" id=2]
+[ext_resource path="res://nonplayable/Bullet.tscn" type="PackedScene" id=3]
+[ext_resource path="res://sound/fire.wav" type="AudioStream" id=4]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 400.0
+
+[node name="UFO" groups=["ufo"] instance=ExtResource( 1 )]
+collision_layer = 8
+script = ExtResource( 2 )
+speed = 300.0
+Projectile = ExtResource( 3 )
+radius_size = 400.0
+
+[node name="CollisionPolygon2D" parent="." index="0"]
+polygon = PoolVector2Array( -40, 0, -24, -8, -16, -24, -8, -32, 8, -32, 16, -24, 24, -8, 40, 0, 8, 16, -8, 16 )
+
+[node name="Line2D" parent="Body" index="0"]
+points = PoolVector2Array( 8, 16, -8, 16, -40, 0, 40, 0, 8, 16 )
+width = 2.0
+
+[node name="Line2D2" type="Line2D" parent="Body" index="1"]
+points = PoolVector2Array( 40, 0, 24, -8, -24, -8, -40, 0 )
+width = 2.0
+
+[node name="Line2D3" type="Line2D" parent="Body" index="2"]
+points = PoolVector2Array( -24, -8, -16, -24, -8, -32, 8, -32, 16, -24, 24, -8 )
+width = 2.0
+
+[node name="ScreenWrapper" parent="." index="3"]
+offset = 36
+
+[node name="ShootTimer" type="Timer" parent="." index="4"]
+wait_time = 1.5
+autostart = true
+
+[node name="WaveTimer" type="Timer" parent="." index="5"]
+autostart = true
+
+[node name="DetectRadius" type="Area2D" parent="." index="6"]
+collision_layer = 8
+collision_mask = 5
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectRadius" index="0"]
+shape = SubResource( 1 )
+
+[node name="InvulnerabilityTimer" type="Timer" parent="." index="7"]
+one_shot = true
+autostart = true
+__meta__ = {
+"_editor_description_": "While this timer is running the UFO can't be destroyed by asteroids. This is to prevent it from being instantly destroyed after spawning
+"
+}
+
+[node name="SaucerSound" type="AudioStreamPlayer" parent="." index="8"]
+volume_db = -20.0
+autoplay = true
+
+[node name="ShootSound" type="AudioStreamPlayer" parent="." index="9"]
+stream = ExtResource( 4 )
+volume_db = -10.0
+pitch_scale = 0.92
+
+[connection signal="timeout" from="ShootTimer" to="." method="shoot"]
+[connection signal="timeout" from="WaveTimer" to="." method="_on_WaveTimer_timeout"]
+[connection signal="area_entered" from="DetectRadius" to="." method="_on_DetectRadius_area_entered"]
+[connection signal="area_exited" from="DetectRadius" to="." method="_on_DetectRadius_area_exited"]
+[connection signal="timeout" from="InvulnerabilityTimer" to="." method="_on_InvulnerabilityTimer_timeout"]

@@ -1,0 +1,204 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://player/scripts/Player.gd" type="Script" id=1]
+[ext_resource path="res://misc/ScreenWrapper.tscn" type="PackedScene" id=2]
+[ext_resource path="res://nonplayable/Bullet.tscn" type="PackedScene" id=3]
+[ext_resource path="res://sound/thrust.wav" type="AudioStream" id=4]
+[ext_resource path="res://sound/fire.wav" type="AudioStream" id=5]
+[ext_resource path="res://misc/Explosion.tscn" type="PackedScene" id=6]
+
+[sub_resource type="Animation" id=1]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0.501961 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=8]
+resource_name = "blink"
+length = 0.16
+loop = true
+step = 0.06
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.06 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "pulse"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.376471 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Thrust:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "thrust"
+length = 0.1
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Thrust:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+
+[sub_resource type="Curve" id=7]
+min_value = -1.0
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=5]
+curve = SubResource( 7 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+flag_disable_z = true
+direction = Vector3( -1, 0, 0 )
+spread = 20.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 238.57
+initial_velocity_random = 0.1
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 2.5
+scale_random = 0.6
+hue_variation_curve = SubResource( 5 )
+
+[node name="Player" type="KinematicBody2D" groups=["player object"]]
+modulate = Color( 1, 1, 1, 0.501961 )
+collision_mask = 0
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": "The player object
+"
+}
+Projectile = ExtResource( 3 )
+ExplosionScene = ExtResource( 6 )
+
+[node name="Body" type="Line2D" parent="."]
+rotation = 3.14159
+scale = Vector2( 2, 2 )
+points = PoolVector2Array( 8, 8, -16, 0, 8, -8, 0, 0, 8, 8 )
+width = 1.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+scale = Vector2( 2, 2 )
+polygon = PoolVector2Array( 16, 0, -8, 8, 0, 0, -8, -8 )
+disabled = true
+
+[node name="BulletPosition" type="Position2D" parent="."]
+position = Vector2( 24, 0 )
+
+[node name="PlayerHitbox" type="Area2D" parent="." groups=["player"]]
+collision_mask = 14
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PlayerHitbox"]
+scale = Vector2( 2, 2 )
+polygon = PoolVector2Array( 16, 0, -8, 8, 0, 0, -8, -8 )
+
+[node name="Thrust" type="Line2D" parent="."]
+modulate = Color( 1, 1, 1, 0.627451 )
+points = PoolVector2Array( -8, -8, -32, 0, -8, 8 )
+width = 2.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "pulse"
+anims/RESET = SubResource( 1 )
+anims/blink = SubResource( 8 )
+anims/pulse = SubResource( 2 )
+
+[node name="ThrustAnimation" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 3 )
+anims/thrust = SubResource( 4 )
+
+[node name="ScreenWrapper" parent="." instance=ExtResource( 2 )]
+offset = 36
+
+[node name="ThrustSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+volume_db = -5.0
+
+[node name="ShootSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+volume_db = -10.0
+
+[node name="ThrustParticles" type="Particles2D" parent="."]
+modulate = Color( 1, 1, 1, 0.627451 )
+position = Vector2( -30, 0 )
+emitting = false
+amount = 6
+lifetime = 0.3
+explosiveness = 0.35
+local_coords = false
+process_material = SubResource( 6 )
+
+[node name="ShootTimer" type="Timer" parent="."]
+wait_time = 0.12
+one_shot = true
+
+[node name="InvincibilityTimer" type="Timer" parent="."]
+wait_time = 2.5
+one_shot = true
+
+[connection signal="area_entered" from="PlayerHitbox" to="." method="_on_Hitbox_area_entered"]
+[connection signal="timeout" from="ShootTimer" to="." method="_on_ShootTimer_timeout"]
+[connection signal="timeout" from="InvincibilityTimer" to="." method="_on_InvincibilityTimer_timeout"]

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://nonplayable/scripts/Asteroid.gd" type="Script" id=1]
+[ext_resource path="res://nonplayable/NonPlayable.tscn" type="PackedScene" id=2]
+
+[node name="Asteroid" groups=["asteroid"] instance=ExtResource( 2 )]
+collision_layer = 4
+script = ExtResource( 1 )
+speed = 100.0
+base_rotation_speed = 0.5
+
+[node name="CollisionPolygon2D" parent="." index="0"]
+scale = Vector2( 1.1, 1.1 )
+polygon = PoolVector2Array( -56, -32, -8, -64, 24, -64, 56, -40, 80, 0, 56, 8, 40, 24, 48, 48, -8, 72, -24, 48, -48, 32, -64, -8 )
+
+[node name="Line2D" parent="Body" index="0"]
+points = PoolVector2Array( -8, -64, 24, -64, 56, -40, 80, 0, 56, 8, 40, 24, 48, 48, -8, 72, -24, 48, -48, 32, -64, -8, -56, -32, -8, -64 )
+width = 3.0
+
+[node name="ScreenWrapper" parent="." index="3"]
+offset = 80

@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/saucerSmall.wav-8403fe45ea562dd79c1a5fa064904923.sample"
+
+[deps]
+
+source_file="res://sound/saucerSmall.wav"
+dest_files=[ "res://.import/saucerSmall.wav-8403fe45ea562dd79c1a5fa064904923.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=2
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0
